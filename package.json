@@ -1,0 +1,19 @@
+{
+  "name": "github-webhooks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "author": "Jimmy King <jimmy.king@meltmedia.com> (http://jimmyking.me)",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "debug": "^2.2.0",
+    "express": "^4.13.3",
+    "github": "^0.2.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.4.1"
+  }
+}
