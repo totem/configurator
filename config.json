@@ -1,0 +1,20 @@
+{
+  "hooks": [
+    {
+      "name": "web",
+      "config": {
+        "url": "http://testing.hooks/hook3",
+        "content_type": "json"
+      },
+      "events": ["push"]
+    },
+    {
+      "name": "web",
+      "config": {
+        "url": "http://testing.hooks/hook4",
+        "content_type": "json"
+      },
+      "events": ["delete"]
+    }
+  ]
+}

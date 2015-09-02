@@ -1,5 +1,8 @@
 var express = require('express'),
     GitHubApi = require('github'),
+    Promise = require('bluebird'),
+    _ = require('lodash'),
+    config = require('./config.json'),
     app = express();
 
 var github = new GitHubApi({
@@ -12,22 +15,44 @@ app.post('/:user/:repo', function (req, res) {
     token: req.headers.authorization.split(' ')[1]
   });
 
-  github.repos.createHook({
-    user: req.params.user,
-    repo: req.params.repo,
-    name: 'web',
-    config: {
-      url: 'http://testing.hooks/hook',
-      content_type: 'json'
-    },
-    events: ['push', 'pull_request']
-  }, function (err, data) {
-    if (err) {
-      res.status(err.code).json(JSON.parse(err.message));
-    }
+  var errorCode = null;
+      hooks = [],
+      promises = [];
 
-    res.status(201).json(data);
-  })
+  _.each(config.hooks, function (hook) {
+    var resolve,
+        reject;
+
+    var hookPromise = new Promise(function (res, rej) {
+      resolve = res;
+      reject = rej;
+    });
+
+    hookPromise.then(function (data) {
+      hooks.push(data);
+    }).catch(function (err) {
+      errorCode = err.code;
+      hooks.push(JSON.parse(err.message));
+    });
+
+    promises.push(hookPromise);
+
+    github.repos.createHook(_.assign(hook, {
+      user: req.params.user,
+      repo: req.params.repo
+    }), function (err, data) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+
+  Promise.settle(promises).then(function () {
+    var statusCode = errorCode || 201;
+    res.status(statusCode).json(hooks);
+  });
 });
 
 module.exports = app;
