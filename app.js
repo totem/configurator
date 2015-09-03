@@ -1,15 +1,55 @@
 var express = require('express'),
     GitHubApi = require('github'),
+    GitHubStrategy = require('passport-github').Strategy,
     Promise = require('bluebird'),
+    passport = require('passport'),
+    cors = require('cors'),
+    path = require('path'),
     _ = require('lodash'),
     config = require('./config.json'),
     app = express();
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'ejs');
+app.use(passport.initialize());
+app.use(cors());
 
 var github = new GitHubApi({
   version: '3.0.0'
 });
 
-app.post('/:user/:repo', function (req, res) {
+var corsOptions = {
+  origin: config.dashboardUrl
+};
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
+
+passport.use(new GitHubStrategy({
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: config.serviceUrl + '/auth/github/callback'
+  }, function (accessToken, refreshToken, profile, done) {
+    profile.token = accessToken;
+    done(null, profile);
+  })
+);
+
+app.get('/auth/github', passport.authenticate('github'));
+
+app.get('/auth/github/callback', passport.authenticate('github'), function (req, res) {
+  res.render('index', {
+    token: req.user.token,
+    origin: config.dashboardUrl
+  });
+});
+
+app.post('/:user/:repo', cors(corsOptions), function (req, res) {
   github.authenticate({
     type: 'oauth',
     token: req.headers.authorization.split(' ')[1]

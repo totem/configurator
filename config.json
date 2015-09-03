@@ -1,9 +1,11 @@
 {
+  "dashboardUrl": "http://localhost:3000",
+  "serviceUrl": "https://6c5d566e.ngrok.io",
   "hooks": [
     {
       "name": "web",
       "config": {
-        "url": "http://testing.hooks/hook3",
+        "url": "http://testing.hooks/hook11",
         "content_type": "json"
       },
       "events": ["push"]
@@ -11,7 +13,7 @@
     {
       "name": "web",
       "config": {
-        "url": "http://testing.hooks/hook4",
+        "url": "http://testing.hooks/hook12",
         "content_type": "json"
       },
       "events": ["delete"]

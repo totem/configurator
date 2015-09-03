@@ -10,10 +10,14 @@
   },
   "dependencies": {
     "bluebird": "^2.9.34",
+    "cors": "^2.7.1",
     "debug": "^2.2.0",
+    "ejs": "^2.3.3",
     "express": "^4.13.3",
     "github": "^0.2.4",
-    "lodash": "^3.10.1"
+    "lodash": "^3.10.1",
+    "passport": "^0.3.0",
+    "passport-github": "^1.0.0"
   },
   "devDependencies": {
     "nodemon": "^1.4.1"
