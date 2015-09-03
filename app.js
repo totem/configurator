@@ -33,7 +33,8 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: config.serviceUrl + '/auth/github/callback'
+    callbackURL: config.serviceUrl + '/auth/github/callback',
+    scope: ['write:repo_hook']
   }, function (accessToken, refreshToken, profile, done) {
     profile.token = accessToken;
     done(null, profile);
