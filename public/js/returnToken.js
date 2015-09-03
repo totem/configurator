@@ -2,8 +2,6 @@
   var token = document.querySelector("meta[name='token']").getAttribute('content'),
       origin = document.querySelector("meta[name='origin']").getAttribute('content');
 
-  console.log(origin);
-
   if (window.opener) {
     // This works in all but IE.
     window.opener.postMessage(
