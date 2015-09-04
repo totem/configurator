@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express'),
     GitHubApi = require('github'),
     GitHubStrategy = require('passport-github').Strategy,
@@ -56,7 +58,7 @@ app.post('/:user/:repo', cors(corsOptions), function (req, res) {
     token: req.headers.authorization.split(' ')[1]
   });
 
-  var errorCode = null;
+  var errorCode = null,
       hooks = [],
       promises = [];
 

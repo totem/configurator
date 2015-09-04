@@ -5,7 +5,7 @@
     {
       "name": "web",
       "config": {
-        "url": "http://testing.hooks/hook11",
+        "url": "http://testing.hooks/hook20",
         "content_type": "json"
       },
       "events": ["push"]
@@ -13,7 +13,7 @@
     {
       "name": "web",
       "config": {
-        "url": "http://testing.hooks/hook12",
+        "url": "http://testing.hooks/hook21",
         "content_type": "json"
       },
       "events": ["delete"]

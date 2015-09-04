@@ -1,6 +1,8 @@
+/* jshint browser: true, strict: false */
+
 ;(function() {
-  var token = document.querySelector("meta[name='token']").getAttribute('content'),
-      origin = document.querySelector("meta[name='origin']").getAttribute('content');
+  var token = document.querySelector('meta[name="token"]').getAttribute('content'),
+      origin = document.querySelector('meta[name="origin"]').getAttribute('content');
 
   if (window.opener) {
     // This works in all but IE.

@@ -1,13 +1,16 @@
 {
-  "name": "github-webhooks",
+  "name": "totem-configurator",
+  "private": true,
   "version": "1.0.0",
-  "description": "",
+  "description": "A microservice for adding Totem's webhooks to GitHub repositories",
   "main": "app.js",
+  "repository": "totem/configurator",
+  "homepage": "https://github.com/totem/configurator",
+  "bugs": {
+    "url": "https://github.com/totem/configurator/issues"
+  },
   "author": "Jimmy King <jimmy.king@meltmedia.com> (http://jimmyking.me)",
   "license": "MIT",
-  "scripts": {
-    "start": "nodemon ./bin/www"
-  },
   "dependencies": {
     "bluebird": "^2.9.34",
     "cors": "^2.7.1",
@@ -20,6 +23,12 @@
     "passport-github": "^1.0.0"
   },
   "devDependencies": {
-    "nodemon": "^1.4.1"
+    "gulp": "^3.9.0",
+    "gulp-jshint": "^1.11.2",
+    "gulp-nodemon": "^1.0.5",
+    "gulp-nodeunit": "0.0.5",
+    "jshint-stylish": "^2.0.1",
+    "nodeunit-express": "0.0.5",
+    "sandboxed-module": "^2.0.2"
   }
 }
