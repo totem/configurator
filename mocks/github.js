@@ -34,8 +34,8 @@ MockGitHubApi.prototype.repos.createHook = function (opts, callback) {
       'x-ratelimit-remaining': '4988',
       'x-ratelimit-reset': '1441382325',
       'x-oauth-scopes': 'write:repo_hook',
-      location: 'https://api.github.com/repos/jking90/hook-test/hooks/5769288',
-      etag: '\"8ca772d03b8a72589fa3996845bdbb95\"',
+      location: hookUrl,
+      etag: '\"XXXXXXX\"',
       status: '201 Created'
     }
   };

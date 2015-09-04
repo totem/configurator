@@ -52,11 +52,16 @@ app.get('/auth/github/callback', passport.authenticate('github'), function (req,
   });
 });
 
-app.post('/:user/:repo', cors(corsOptions), function (req, res) {
-  github.authenticate({
-    type: 'oauth',
-    token: req.headers.authorization.split(' ')[1]
-  });
+app.post('/add/:user/:repo', cors(corsOptions), function (req, res) {
+  try {
+    github.authenticate({
+      type: 'oauth',
+      token: req.headers.authorization.split(' ')[1]
+    });
+  } catch (err) {
+    res.sendStatus(401);
+    return;
+  }
 
   var errorCode = null,
       hooks = [],
