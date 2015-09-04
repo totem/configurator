@@ -4,7 +4,7 @@
 
 Works with the [Totem dashboard](https://github.com/totem/dashboard-v2)
 
-### Setup
+## Setup
 
 #### Clone and install dependencies
 
@@ -60,7 +60,7 @@ Your config service should serve something along the lines of the following:
 
 (Currently this is just a `config.json` file in the root of the repo, TODO: remove and set up config service.)
 
-### Runnning
+## Runnning
 
 #### Local development
 
@@ -78,7 +78,7 @@ node bin/www
 
 This will serve the app at port `5000`.
 
-### Tests
+## Tests
 
 #### Linting
 
