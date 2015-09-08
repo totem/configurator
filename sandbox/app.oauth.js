@@ -1,7 +1,7 @@
 'use strict';
 
 process.env.GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_SECRET = 'XXXX';
-process.env.GITHUB_ACCESS_TOKEN = 'undefined';
+delete process.env.GITHUB_ACCESS_TOKEN;
 
 var SandboxedModule = require('sandboxed-module');
 

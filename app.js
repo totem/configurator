@@ -10,9 +10,9 @@ var express = require('express'),
     _ = require('lodash'),
     config = require('./config.json'),
     app = express(),
-    githubToken = process.env.GITHUB_ACCESS_TOKEN,
-    githubClientId = process.env.GITHUB_CLIENT_ID,
-    githubClientSecret = process.env.GITHUB_CLIENT_SECRET;
+    githubToken = ('GITHUB_ACCESS_TOKEN' in process.env) ? process.env.GITHUB_ACCESS_TOKEN : false,
+    githubClientId = ('GITHUB_CLIENT_ID' in process.env) ? process.env.GITHUB_CLIENT_ID : false,
+    githubClientSecret = ('GITHUB_CLIENT_SECRET' in process.env) ? process.env.GITHUB_CLIENT_SECRET : false;
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
@@ -27,8 +27,7 @@ var corsOptions = {
   origin: config.dashboardUrl
 };
 
-if (githubClientId && githubClientId !== 'undefined' &&
-    githubClientSecret && githubClientSecret !== 'undefined') {
+if (githubClientId && githubClientSecret) {
   passport.serializeUser(function(user, done) {
     done(null, user);
   });
@@ -59,7 +58,7 @@ if (githubClientId && githubClientId !== 'undefined' &&
 }
 
 app.post('/add/:user/:repo', cors(corsOptions), function (req, res) {
-  if (githubToken && githubToken !== 'undefined') {
+  if (githubToken) {
     github.authenticate({
       type: 'token',
       token: githubToken

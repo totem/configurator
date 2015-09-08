@@ -1,8 +1,5 @@
 'use strict';
 
-// process.env.GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_SECRET = 'XXXX';
-// process.env.GITHUB_ACCESS_TOKEN = 'undefined';
-
 var request = require('nodeunit-express'),
     appOAuth = require('./sandbox/app.oauth'),
     appToken = require('./sandbox/app.token');
@@ -33,7 +30,6 @@ module.exports = {
   'Create hooks with personal access token': function (test) {
     var express = request(appToken);
     express
-      .set('Authorization', 'Bearer XXXXXX')
       .post('/add/user/repo')
       .expect(function (response) {
         test.equal(response.statusCode, 201);
