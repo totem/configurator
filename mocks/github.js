@@ -40,11 +40,22 @@ MockGitHubApi.prototype.repos.createHook = function (opts, callback) {
     }
   };
 
-  callback(null, response);
+  var error = {
+    code: 401,
+    message: JSON.stringify({})
+  };
+
+  if (this.authenticated) {
+    callback(null, response);
+  } else {
+    callback(error);
+  }
 };
 
-MockGitHubApi.prototype.authenticate = function () {
-  return true;
+MockGitHubApi.prototype.authenticate = function (opts) {
+  if (opts.token) {
+    this.authenticated = true;
+  }
 };
 
 module.exports = MockGitHubApi;

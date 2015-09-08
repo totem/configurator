@@ -9,7 +9,10 @@ var express = require('express'),
     path = require('path'),
     _ = require('lodash'),
     config = require('./config.json'),
-    app = express();
+    app = express(),
+    githubToken = process.env.GITHUB_ACCESS_TOKEN,
+    githubClientId = process.env.GITHUB_CLIENT_ID,
+    githubClientSecret = process.env.GITHUB_CLIENT_SECRET;
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
@@ -24,43 +27,53 @@ var corsOptions = {
   origin: config.dashboardUrl
 };
 
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
-});
-
-passport.use(new GitHubStrategy({
-    clientID: process.env.GITHUB_CLIENT_ID,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: config.serviceUrl + '/auth/github/callback',
-    scope: ['write:repo_hook']
-  }, function (accessToken, refreshToken, profile, done) {
-    profile.token = accessToken;
-    done(null, profile);
-  })
-);
-
-app.get('/auth/github', passport.authenticate('github'));
-
-app.get('/auth/github/callback', passport.authenticate('github'), function (req, res) {
-  res.render('index', {
-    token: req.user.token,
-    origin: config.dashboardUrl
+if (githubClientId && githubClientId !== 'undefined' &&
+    githubClientSecret && githubClientSecret !== 'undefined') {
+  passport.serializeUser(function(user, done) {
+    done(null, user);
   });
-});
+
+  passport.deserializeUser(function(obj, done) {
+    done(null, obj);
+  });
+
+  passport.use(new GitHubStrategy({
+      clientID: githubClientId,
+      clientSecret: githubClientSecret,
+      callbackURL: config.serviceUrl + '/auth/github/callback',
+      scope: ['write:repo_hook']
+    }, function (accessToken, refreshToken, profile, done) {
+      profile.token = accessToken;
+      done(null, profile);
+    })
+  );
+
+  app.get('/auth/github', passport.authenticate('github'));
+
+  app.get('/auth/github/callback', passport.authenticate('github'), function (req, res) {
+    res.render('index', {
+      token: req.user.token,
+      origin: config.dashboardUrl
+    });
+  });
+}
 
 app.post('/add/:user/:repo', cors(corsOptions), function (req, res) {
-  try {
+  if (githubToken && githubToken !== 'undefined') {
     github.authenticate({
-      type: 'oauth',
-      token: req.headers.authorization.split(' ')[1]
+      type: 'token',
+      token: githubToken
     });
-  } catch (err) {
-    res.sendStatus(401);
-    return;
+  } else {
+    try {
+      github.authenticate({
+        type: 'oauth',
+        token: req.headers.authorization.split(' ')[1]
+      });
+    } catch (err) {
+      res.sendStatus(401);
+      return;
+    }
   }
 
   var errorCode = null,
