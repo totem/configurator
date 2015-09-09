@@ -20,45 +20,45 @@ For local development [Gulp](http://gulpjs.com/) is required. If it's not alread
 npm install -g gulp
 ```
 
-#### Register your GitHub application
+#### Register your GitHub application or generate personal access token
 
-You can [register here](https://github.com/settings/applications/new). Set the 'Authorization callback URL' to the domain you are hosting this service at with a path of `/auth/github/callback`.
+To use OAuth, you can [register a new application here](https://github.com/settings/applications/new). Set the 'Authorization callback URL' to the domain you are hosting this service at with a path of `/auth/github/callback`.
+
+Alternatively, you can [generate a personal access token here](https://github.com/settings/tokens/new), and use that to authorize the configurator. You must give the token a scope containing `write:repo_hook`.
 
 #### Set environment variables
 
-- `GITHUB_CLIENT_ID`: the client ID for your registered GitHub app
-- `GITHUB_CLIENT_SECRET`: the client secret for your registered GitHub app
+- `CONFIGURATOR_HOST`: the host that the configurator is deployed to
+- `TOTEM_SERVICES_CONFIG`: the URL to your totem services config on your config service (`https://{{config-service-url}}/providers/s3/groups/{{env}}/configs/totem-services`)
+
+##### OAuth
+
+- `CONFIGURATOR_GITHUB_CLIENT_ID`: the client ID for your registered GitHub app
+- `CONFIGURATOR_GITHUB_CLIENT_SECRET`: the client secret for your registered GitHub app
+
+##### Personal Access Token
+
+- `CONFIGURATOR_GITHUB_ACCESS_TOKEN`: the personal access token you generated on GitHub
 
 #### Set up [config service](https://github.com/totem/config)
 
 Your config service should serve something along the lines of the following:
 
-```json
-{
-  "dashboardUrl": "< URL to your Totem dashboard >",
-  "serviceUrl": "< URL this service will be hosted at >",
-  "hooks": [
-    {
-      "name": "web",
-      "config": {
-        "url": "< URL to your Image Factory webhook >",
-        "content_type": "json"
-      },
-      "events": ["push"]
-    },
-    {
-      "name": "web",
-      "config": {
-        "url": "< URL to your Orchestrator webhook >",
-        "content_type": "json"
-      },
-      "events": ["delete"]
-    }
-  ]
-}
+```yml
+hooks:
+  - name: 'web'
+    config:
+      url: '{{URL to your Image Factory webhook}}'
+      content_type: 'json'
+    events:
+      - push
+  - name: 'web'
+    config:
+      url: '{{URL to your Orchestrator webhook}}'
+      content_type: 'json'
+    events:
+      - delete
 ```
-
-(Currently this is just a `config.json` file in the root of the repo, TODO: remove and set up config service.)
 
 ## Runnning
 
