@@ -1,10 +1,11 @@
 'use strict';
 
-var Promise = require('bluebird'),
-    resolveServices,
-    resolveRuntime;
+var Promise = require('bluebird');
 
 var mockConfig = function (clientId, clientSecret, token) {
+  var resolveServices,
+      resolveRuntime;
+
   this.github = {
     clientId: clientId,
     clientSecret: clientSecret,
