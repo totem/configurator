@@ -29,6 +29,7 @@ Alternatively, you can [generate a personal access token here](https://github.co
 #### Set environment variables
 
 - `CONFIGURATOR_HOST`: the host that the configurator is deployed to
+- `CONFIGURATOR_RUNTIME_CONFIG`: the URL to your runtime config for the configurator from your config service
 - `TOTEM_SERVICES_CONFIG`: the URL to your totem services config on your config service (`https://{{config-service-url}}/providers/s3/groups/{{env}}/configs/totem-services`)
 
 ##### OAuth
