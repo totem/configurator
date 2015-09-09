@@ -21,7 +21,7 @@ ENV DISCOVER totem-configurator:5000
 WORKDIR /opt/totem-configurator
 
 # Set default command to gulp
-ENTRYPOINT ["node"]
+ENTRYPOINT ["npm"]
 
 # Set default param for gulp to the output directory
-CMD ["/opt/totem-configurator/bin/www"]
+CMD ["start"]

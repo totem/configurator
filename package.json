@@ -11,6 +11,9 @@
   },
   "author": "Jimmy King <jimmy.king@meltmedia.com> (http://jimmyking.me)",
   "license": "MIT",
+  "scripts": {
+    "start": "node bin/www"
+  },
   "dependencies": {
     "bluebird": "^2.9.34",
     "cors": "^2.7.1",

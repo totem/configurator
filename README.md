@@ -74,7 +74,7 @@ This will serve the app at `http://localhost:5000`.
 #### Production
 
 ```
-node bin/www
+npm start
 ```
 
 This will serve the app at port `5000`.
