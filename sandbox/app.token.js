@@ -1,12 +1,12 @@
 'use strict';
 
 var SandboxedModule = require('sandboxed-module'),
-    MockConfig = require('../mocks/config');
+    express = require('express');
 
 var app = SandboxedModule.require('../app', {
   requires: {
-    github: require('../mocks/github'),
-    './modules/config': new MockConfig(null, null, 'XXXX')
+    './routes/add': require('./routes/add.token'),
+    './routes/auth': express.Router()
   }
 });
 
