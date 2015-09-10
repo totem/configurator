@@ -1,13 +1,12 @@
 'use strict';
 
 var SandboxedModule = require('sandboxed-module'),
-    MockConfig = require('../mocks/config'),
-    config = new MockConfig(null, null, 'XXXX');
+    MockConfig = require('../mocks/config');
 
 var app = SandboxedModule.require('../app', {
   requires: {
     github: require('../mocks/github'),
-    './modules/config': config
+    './modules/config': new MockConfig(null, null, 'XXXX')
   }
 });
 

@@ -2,7 +2,7 @@
 
 var Promise = require('bluebird');
 
-var mockConfig = function (clientId, clientSecret, token) {
+var MockConfig = function (clientId, clientSecret, token) {
   var resolveServices,
       resolveRuntime;
 
@@ -23,6 +23,7 @@ var mockConfig = function (clientId, clientSecret, token) {
   });
 
   resolveServices({dashboard: {href: {value: 'XXXX'}}});
+
   resolveRuntime({hooks: [{
     config: {
       'content_type': 'json',
@@ -33,4 +34,4 @@ var mockConfig = function (clientId, clientSecret, token) {
   }]});
 };
 
-module.exports = mockConfig;
+module.exports = MockConfig;

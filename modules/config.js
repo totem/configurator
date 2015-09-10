@@ -6,10 +6,14 @@ var Promise = require('bluebird'),
     resolveServices,
     resolveRuntime;
 
+var getEnvVar = function (envVarName) {
+  return (envVarName in process.env) ? process.env[envVarName] : null;
+};
+
 var githubConfig = {
-  token: ('CONFIGURATOR_GITHUB_ACCESS_TOKEN' in process.env) ? process.env.CONFIGURATOR_GITHUB_ACCESS_TOKEN : false,
-  clientId: ('CONFIGURATOR_GITHUB_CLIENT_ID' in process.env) ? process.env.CONFIGURATOR_GITHUB_CLIENT_ID : false,
-  clientSecret: ('CONFIGURATOR_GITHUB_CLIENT_SECRET' in process.env) ? process.env.CONFIGURATOR_GITHUB_CLIENT_SECRET : false
+  token: getEnvVar('CONFIGURATOR_GITHUB_ACCESS_TOKEN'),
+  clientId: getEnvVar('CONFIGURATOR_GITHUB_CLIENT_ID'),
+  clientSecret: getEnvVar('CONFIGURATOR_GITHUB_CLIENT_SECRET')
 };
 
 var servicesConfigPromise = new Promise(function (res) {

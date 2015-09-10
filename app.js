@@ -8,7 +8,7 @@ var express = require('express'),
     cors = require('cors'),
     path = require('path'),
     _ = require('lodash'),
-    config = require('./modules/config'),
+    configPromises = require('./modules/config'),
     app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -20,54 +20,59 @@ var github = new GitHubApi({
   version: '3.0.0'
 });
 
-if (config.github.clientId && config.github.clientSecret) {
-  passport.serializeUser(function(user, done) {
-    done(null, user);
-  });
+Promise.props(configPromises).then(function (config) {
+  if (config.github.clientId && config.github.clientSecret) {
+    // If there are the necessary env vars for OAuth, then set up OAuth
 
-  passport.deserializeUser(function(obj, done) {
-    done(null, obj);
-  });
-
-  passport.use(new GitHubStrategy({
-      clientID: config.github.clientId,
-      clientSecret: config.github.clientSecret,
-      callbackURL: config.host + '/auth/github/callback',
-      scope: ['write:repo_hook']
-    }, function (accessToken, refreshToken, profile, done) {
-      profile.token = accessToken;
-      done(null, profile);
-    })
-  );
-
-  app.get('/auth/github', passport.authenticate('github'));
-
-  app.get('/auth/github/callback', passport.authenticate('github'), function (req, res) {
-    res.render('index', {
-      token: req.user.token,
-      origin: config.dashboardUrl
+    passport.serializeUser(function(user, done) {
+      done(null, user);
     });
-  });
-}
 
-Promise.props(config).then(function (configuration) {
+    passport.deserializeUser(function(obj, done) {
+      done(null, obj);
+    });
+
+    passport.use(new GitHubStrategy({
+        clientID: config.github.clientId,
+        clientSecret: config.github.clientSecret,
+        callbackURL: config.host + '/auth/github/callback',
+        scope: ['write:repo_hook']
+      }, function (accessToken, refreshToken, profile, done) {
+        profile.token = accessToken;
+        done(null, profile);
+      })
+    );
+
+    app.get('/auth/github', passport.authenticate('github'));
+
+    app.get('/auth/github/callback', passport.authenticate('github'), function (req, res) {
+      res.render('index', {
+        token: req.user.token,
+        origin: config.services.dashboard.href.value
+      });
+    });
+  }
+
   var corsOptions = {
-    origin: configuration.services.dashboard.href.value
+    origin: config.services.dashboard.href.value
   };
 
   app.post('/add/:user/:repo', cors(corsOptions), function (req, res) {
     if (config.github.token) {
+      // If a personal access token has been provided, use that instead of OAuth
       github.authenticate({
         type: 'token',
         token: config.github.token
       });
     } else {
       try {
+        // Attempt to get OAuth token from Authorization header
         github.authenticate({
           type: 'oauth',
           token: req.headers.authorization.split(' ')[1]
         });
       } catch (err) {
+        // Return Unauthorized if no Authrorization header exists
         res.sendStatus(401);
         return;
       }
@@ -75,9 +80,9 @@ Promise.props(config).then(function (configuration) {
 
     var errorCode = null,
         hooks = [],
-        promises = [];
+        hookPromises = [];
 
-    _.each(configuration.runtime.hooks, function (hook) {
+    _.each(config.runtime.hooks, function (hook) {
       var resolve,
           reject;
 
@@ -89,11 +94,12 @@ Promise.props(config).then(function (configuration) {
       hookPromise.then(function (data) {
         hooks.push(data);
       }).catch(function (err) {
-        errorCode = err.code;
-        hooks.push(JSON.parse(err.message));
+        var message = JSON.parse(err.message);
+        errorCode = message.code = err.code;
+        hooks.push(message);
       });
 
-      promises.push(hookPromise);
+      hookPromises.push(hookPromise);
 
       github.repos.createHook(_.assign(hook, {
         user: req.params.user,
@@ -107,9 +113,8 @@ Promise.props(config).then(function (configuration) {
       });
     });
 
-    Promise.settle(promises).then(function () {
-      var statusCode = errorCode || 201;
-      res.status(statusCode).json(hooks);
+    Promise.settle(hookPromises).then(function () {
+      res.status(errorCode ? errorCode : 201).json(hooks);
     });
   });
 });
