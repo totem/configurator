@@ -14,7 +14,7 @@ var github = new GitHubApi({
 
 Promise.props(configPromises).then(function (config) {
   var corsOptions = {
-    origin: config.services.dashboard.href.value
+    origin: '*'
   };
 
   router.post('/:user/:repo', cors(corsOptions), function (req, res) {
