@@ -1,8 +1,8 @@
 'use strict';
 
 var request = require('nodeunit-express'),
-    appOAuth = require('./sandbox/app.oauth'),
-    appToken = require('./sandbox/app.token');
+    appOAuth = require('../sandbox/app.oauth'),
+    appToken = require('../sandbox/app.token');
 
 module.exports = {
   'Create hooks with OAuth': function (test) {

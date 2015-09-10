@@ -6,11 +6,11 @@ This route is for authenticating the user with GitHub via OAuth.
 
 For this to work, you will need to direct your user to this route via `window.open()`, and listen in your opener window for a message from the opened window. The message will contain a stringified object with the user's OAuth token at `message.token`. You should store that token and send it in the `Authorization` header when sending requests to `add/:user/:repo` as `Bearer <TOKEN>`.
 
-## `/add/:user/:repo`
+## POST `/add/:user/:repo`
 
 This route is for adding the configured webhooks to GitHub repositories.
 
-You should use the `POST` method for requests to this route. An `Authorization` header with an OAuth token is required by this route. The response from the route will include an array of objects with information from GitHub about the hooks that were created. If there are errors creating any of the webhooks, there will be an error object in place of that webhook's information object. When all webhook creations are successful, the app will respond with a `201 Created` status code. If there are errors creating any of the webhooks, the app will respond with the status code from the last error.
+An `Authorization` header with an OAuth token is required by this route. The response from the route will include an array of objects with information from GitHub about the hooks that were created. If there are errors creating any of the webhooks, there will be an error object in place of that webhook's information object. When all webhook creations are successful, the app will respond with a `201 Created` status code. If there are errors creating any of the webhooks, the app will respond with the status code from the last error.
 
 #### Example information object
 
