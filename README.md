@@ -1,5 +1,7 @@
 # configurator
 
+[![Build Status](https://travis-ci.org/totem/configurator.svg)](https://travis-ci.org/totem/configurator)
+
 > A microservice for adding Totem's webhooks to GitHub repositories
 
 Works with the [Totem dashboard](https://github.com/totem/dashboard-v2)
