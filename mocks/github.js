@@ -46,6 +46,7 @@ MockGitHubApi.prototype.repos.createHook = function (opts, callback) {
   };
 
   if (this.authenticated) {
+    this.authenticated = false;
     callback(null, response);
   } else {
     callback(error);

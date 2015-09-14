@@ -12,7 +12,7 @@ var MockConfig = function (clientId, clientSecret, token) {
     token: token
   };
 
-  this.host = 'XXXX';
+  this.host = 'https://totem-configurator.dev';
 
   this.services = new Promise(function (res) {
     resolveServices = res;

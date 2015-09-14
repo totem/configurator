@@ -2,12 +2,10 @@
 
 var express = require('express'),
     GitHubStrategy = require('passport-github').Strategy,
-    Promise = require('bluebird'),
     passport = require('passport'),
-    configPromises = require('../modules/config'),
     router = express.Router();
 
-Promise.props(configPromises).then(function (config) {
+function start (config) {
   if (config.github.clientId && config.github.clientSecret) {
     passport.serializeUser(function(user, done) {
       done(null, user);
@@ -37,6 +35,9 @@ Promise.props(configPromises).then(function (config) {
       });
     });
   }
-});
+}
 
-module.exports = router;
+module.exports = {
+  router: router,
+  start: start
+};

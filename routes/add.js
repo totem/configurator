@@ -5,18 +5,17 @@ var express = require('express'),
     cors = require('cors'),
     GitHubApi = require('github'),
     _ = require('lodash'),
-    configPromises = require('../modules/config'),
     router = express.Router();
 
 var github = new GitHubApi({
   version: '3.0.0'
 });
 
-Promise.props(configPromises).then(function (config) {
-  var corsOptions = {
-    origin: '*'
-  };
+var corsOptions = {
+  origin: '*'
+};
 
+function start (config) {
   router.post('/:user/:repo', cors(corsOptions), function (req, res) {
     if (config.github.token) {
       // If a personal access token has been provided, use that instead of OAuth
@@ -55,7 +54,8 @@ Promise.props(configPromises).then(function (config) {
         hooks.push(data);
       }).catch(function (err) {
         var message = JSON.parse(err.message);
-        errorCode = message.code = err.code;
+        errorCode = 502;
+        message.code = err.code;
         hooks.push(message);
       });
 
@@ -77,6 +77,9 @@ Promise.props(configPromises).then(function (config) {
       res.status(errorCode ? errorCode : 201).json(hooks);
     });
   });
-});
+}
 
-module.exports = router;
+module.exports = {
+  router: router,
+  start: start
+};
